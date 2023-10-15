@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>steamfinder demo</title>
+</head>
+<body>
+<form>
+    <label for="minprice">Min. price:</label>
+    <input type="number" min="30" max="2000" name="minprice" value="{{ minprice }}">
+    <label for="maxprice">Max. price:</label>
+    <input type="number" min="30" max="2000" name="maxprice" value="{{ maxprice }}">
+    <br/>
+    <label for="disable_csgo">Disable CSGO</label>
+    <input type="checkbox" name="disable_csgo" {% if not csgo %}checked{% endif %}>
+    <label for="disable_dota2">Disable Dota2</label>
+    <input type="checkbox" name="disable_dota2" {% if not dota %}checked{% endif %}>
+    <label for="disable_tf2">Disable TF2</label>
+    <input type="checkbox" name="disable_tf2" {% if not tf %}checked{% endif %}>
+    <br/>
+    <input type="submit">
+    <br/><br/>
+    <style>
+        .visited {
+        color: rgb(0, 246, 70);
+        }
+    </style>
+</form>
+<a href="https://github.com/AnalystAssertiveAmbition/AvatarFinder" target="_blank"><h1>Source Code</h1></a>
+{% for listing in listings %}
+{{ listing.time }}
+<img  src="https://avatars.akamai.steamstatic.com/{{ listing.owner_avatar }}" >
+<a id="{{listing.id}}" target="_blank" onclick="makeRequest(event, '{{ listing.owner_avatar }}', '{{ listing.owner_name }}')">
+    {{ listing.owner_name }} - {{ listing.item_name }} - ${{ listing.price }}
+</a><br/><br/>
+{% endfor %}
+
+<script>
+    function makeRequest(event, avatarImgName, username) {
+      event.preventDefault(); // Prevent the default link click behavior
+
+      avatarName = avatarImgName.split(".")[0]
+      // Make the HTTP request
+      fetch(`/avatar-finder?avatarName=${avatarName}&username=${username}`)
+        .then(response => response.text())
+        .then(steamIdOrUsername => {
+            // Update the href attribute of the link element
+            const linkElement = document.getElementById(event.target.id);
+            let url = null
+
+            if(/^\d+$/.test(steamIdOrUsername)){
+                url = "https://steamcommunity.com/profiles/" + steamIdOrUsername
+            } else if(steamIdOrUsername == ""){
+                url = "https://steamcommunity.com/search/users/#text=_" + username
+            } else{
+                url = "https://steamcommunity.com/id/" + steamIdOrUsername
+            }
+            
+            linkElement.style.color = "#C62828"
+            linkElement.setAttribute('href', url);
+        });
+    }
+</script>
+
+<script>
+const links = document.querySelectorAll('a');
+
+links.forEach(link => {
+  // Check if link has been visited
+  if (localStorage.getItem(link.id)) {
+    link.classList.add('visited');
+  }
+
+  // Mark link as visited on click
+  link.addEventListener('click', () => {
+    localStorage.setItem(link.id, true);
+    link.classList.add('visited');
+  });
+});
+</script>
+</body>
+</html>
+
+
+
+  
+
+  

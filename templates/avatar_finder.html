@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ name }} {{ avatar }}</title>
+</head>
+<body>
+{% for profile in profiles %}
+    <a href="https://steamcommunity.com/search/users/#text={{profile["steamid"]}}">
+        {{ profile["steamid"] }} {{ profile["personaname"] }}
+        {% if profile["personastate"] == 0 %}
+        offline
+        {% else %}
+        online
+        {% endif %}
+        <br/>
+    </a>
+{% endfor %}
+</body>
+</html>

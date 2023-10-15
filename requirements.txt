@@ -1,0 +1,8 @@
+flask
+psycopg2-binary
+asyncio
+aiohttp
+argparse
+beautifulsoup4
+
+#sudo apt install postgresql postgresql-server-dev-all
