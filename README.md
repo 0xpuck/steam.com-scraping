@@ -1,4 +1,5 @@
 # AvatarFinder + MarketFinder
+Specify the range of data to be scraped by specifying the Min Price and Max Price values.
 
 | <img src="./figures/30~100.png"  height=450 width=400> | <img src="./figures/300~400.png" width=400 height=500> |
 | :---Scraping data whose price is between 30 and 100---: | :---Scraping data whose price is between 300 and 400---: |
