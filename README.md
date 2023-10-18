@@ -1,4 +1,8 @@
 # AvatarFinder + MarketFinder
+
+| <img src="./figures/30~100.png"  height=500 width=450> | <img src="./figures/300~400.png" width=450 height=550> |
+| :----------------------------------------------------------: | :----------------------------------------------------------: | :----------------------------------------------------------: |
+
 ### requirements
  - Python 3
  - PostgreSQL + 150GB SSD Storage
