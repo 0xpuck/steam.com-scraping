@@ -6,7 +6,7 @@
 </head>
 <body>
 {% for profile in profiles %}
-    <a href="https://steamcommunity.com/search/users/#text={{profile["steamid"]}}">
+    <a href="https://steamcommunity.com/search/users/#text={{profile['steamid']}}">
         {{ profile["steamid"] }} {{ profile["personaname"] }}
         {% if profile["personastate"] == 0 %}
         offline

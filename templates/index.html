@@ -26,10 +26,10 @@
         }
     </style>
 </form>
-<a href="https://github.com/AnalystAssertiveAmbition/AvatarFinder" target="_blank"><h1>Source Code</h1></a>
+<a href="https://github.com/DanielBraine/steam.com-scraping" target="_blank"><h1>Source Code</h1></a>
 {% for listing in listings %}
 {{ listing.time }}
-<img  src="https://avatars.akamai.steamstatic.com/{{ listing.owner_avatar }}" >
+<img src="https://avatars.akamai.steamstatic.com/{{ listing.owner_avatar }}" >
 <a id="{{listing.id}}" target="_blank" onclick="makeRequest(event, '{{ listing.owner_avatar }}', '{{ listing.owner_name }}')">
     {{ listing.owner_name }} - {{ listing.item_name }} - ${{ listing.price }}
 </a><br/><br/>
