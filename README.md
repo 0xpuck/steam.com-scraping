@@ -2,7 +2,7 @@
 Specify the range of data to be scraped by specifying the Min Price and Max Price values.
 
 | <img src="./figures/a.png"  height=450 width=900> |
-| <img src="./figures/30~100.png"  height=450 width=400> | <img src="./figures/300~400.png" width=400 height=500> |
+| <img src="./figures/scrapinglist.png"  height=450 width=400> | <img src="./figures/profile.png" width=400 height=500> |
 | :---Scraping data whose price is between 30 and 100---: | :---Scraping data whose price is between 300 and 400---: |
 
 ### requirements
@@ -11,29 +11,21 @@ Specify the range of data to be scraped by specifying the Min Price and Max Pric
 
 #### create tables and indexes in psql
 ```sql
-CREATE TABLE users(
-    steam64id bigint,
-    avatar VARCHAR(200),
-    PRIMARY KEY(steam64id)
-);
-
-CREATE INDEX avatar_index ON users (avatar);
-
-
 CREATE TABLE listings(
     id SERIAL PRIMARY KEY,
-    game int,
     item_name VARCHAR(200),
     time timestamp,
     price int,
     owner_name VARCHAR(200),
     owner_avatar VARCHAR(200),
-    owner_steamid VARCHAR(200) UNIQUE,
-    CONSTRAINT owner_item_constraint UNIQUE(owner_name, item_name)
+    profile_link VARCHAR(200),
+    CONSTRAINT owner_item_constraint UNIQUE(owner_name, item_name, price, profile_link)
 );
 
 CREATE INDEX ON listings(owner_name);
 CREATE INDEX ON listings(item_name);
+CREATE INDEX ON listings(price);
+CREATE INDEX ON listings(profile_link);
 ```
 
 #### populate database with users

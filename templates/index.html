@@ -3,86 +3,105 @@
 <head>
     <meta charset="UTF-8">
     <title>steamfinder demo</title>
-</head>
-<body>
-<form>
-    <label for="minprice">Min. price:</label>
-    <input type="number" min="30" max="2000" name="minprice" value="{{ minprice }}">
-    <label for="maxprice">Max. price:</label>
-    <input type="number" min="30" max="2000" name="maxprice" value="{{ maxprice }}">
-    <br/>
-    <label for="disable_csgo">Disable CSGO</label>
-    <input type="checkbox" name="disable_csgo" {% if not csgo %}checked{% endif %}>
-    <label for="disable_dota2">Disable Dota2</label>
-    <input type="checkbox" name="disable_dota2" {% if not dota %}checked{% endif %}>
-    <label for="disable_tf2">Disable TF2</label>
-    <input type="checkbox" name="disable_tf2" {% if not tf %}checked{% endif %}>
-    <br/>
-    <input type="submit">
-    <br/><br/>
     <style>
-        .visited {
-        color: rgb(0, 246, 70);
+        th, td {
+            border-bottom-style: solid; 
+            border-width: 2px; 
+            border-color: white;
         }
     </style>
-</form>
-<a href="https://github.com/alocparker/steam.com-scraping" target="_blank"><h1>Source Code</h1></a>
-{% for listing in listings %}
-{{ listing.time }}
-<img src="https://avatars.akamai.steamstatic.com/{{ listing.owner_avatar }}" >
-<a id="{{listing.id}}" target="_blank" onclick="makeRequest(event, '{{ listing.owner_avatar }}', '{{ listing.owner_name }}')">
-    {{ listing.owner_name }} - {{ listing.item_name }} - ${{ listing.price }}
-</a><br/><br/>
-{% endfor %}
-
-<script>
-    function makeRequest(event, avatarImgName, username) {
-      event.preventDefault(); // Prevent the default link click behavior
-
-      avatarName = avatarImgName.split(".")[0]
-      // Make the HTTP request
-      fetch(`/avatar-finder?avatarName=${avatarName}&username=${username}`)
-        .then(response => response.text())
-        .then(steamIdOrUsername => {
-            // Update the href attribute of the link element
-            const linkElement = document.getElementById(event.target.id);
-            let url = null
-
-            if(/^\d+$/.test(steamIdOrUsername)){
-                url = "https://steamcommunity.com/profiles/" + steamIdOrUsername
-            } else if(steamIdOrUsername == ""){
-                url = "https://steamcommunity.com/search/users/#text=_" + username
-            } else{
-                url = "https://steamcommunity.com/id/" + steamIdOrUsername
+</head>
+<body style="background-color: #1c0b2e;">
+    <form style="margin-top: 100px;">
+        <div style="text-align: center; width: 80%; max-width: 800px; margin: auto;">
+            <div style="box-sizing: border-box; float: left; width: 50%; padding-right: 10px;">
+                <div style="text-align: left; margin-bottom: 5px;">
+                    <label for="minprice" style="color: white;">Min. price:</label>
+                </div>
+                <input type="number" min="30" max="2000" name="minprice" value="{{ minprice }}" style="width: 100%;">
+            </div>
+            <div style="box-sizing: border-box; float: right; width: 50%; padding-left: 10px;">
+                <div style="text-align: left; margin-bottom: 5px;">
+                    <label for="maxprice" style="color: white;">Max. price:</label>
+                </div>
+                <input type="number" min="30" max="2000" name="maxprice" value="{{ maxprice }}" style="width: 100%;">
+            </div>
+            <div style="float: left; text-align: left;  margin-top: 5px;">
+                <input type="submit">
+                <div style="margin-top: 3px;">
+                    <!-- <input type="checkbox">
+                    <label for="disable_dota2" style="color: white;">Notification Sound</label> -->
+                    <input id="auto_refresh_checkbox" type="checkbox" name="auto_refresh" {% if not auto_refresh %}checked{% endif %}>
+                    <label for="disable_tf2" style="color: white;">Auto Refresh</label>
+                </div>
+            </div>
+            <div style="float: left; text-align: left;  margin-top: 5px; margin-left: 15%;">
+                <div style="text-align: left; margin-bottom: 5px;">
+                    <label for="limit" style="color: white;">Number of lists to display (50 ~ 100)</label>
+                </div>
+                <input type="number" min="50" max="100" name="limit" value="{{ limit }}" style="width: 100%;">
+            </div>
+        </div>
+        <style>
+            .visited {
+            color: rgb(0, 246, 70);
             }
+        </style>
+    </form>
+    <div style="width: 100%; display: block; max-width: 1248px; margin: auto">
+        <table style="color: white; width: 80%; margin: auto; padding-top: 20px; min-width: 900px;">
+            <tr style="text-align: left;">
+              <th>#</th>
+              <th style="width: 600px;">Name</th>
+              <th>Price</th>
+              <th>LINK</th>
+              <th>Date</th>
+            </tr>
+            {% for listing in listings %}
+                <tr id="{{ listing.owner_name }} - {{ listing.item_name }} - {{ listing.price }}" style="text-align: left;" onclick="makeRequest(event, '{{listing.profile_link}}')">
+                    <td><img src="https://avatars.akamai.steamstatic.com/{{ listing.owner_avatar }}" ></td>
+                    <td target="_blank">{{ listing.owner_name }} - {{ listing.item_name }}</td>
+                    <td>${{ listing.price }}</td>
+                    <td><button onclick="makeRequest(event, '{{listing.profile_link}}')">OPEN LINK</button></td>
+                    <td>{{ listing.time }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+    <script>
+        function makeRequest(event, url) {
+            event.preventDefault();
+            window.open(url);
+        }
+    </script>
+    
+    <script>
+        function myFunction() {
+            const autoRefreshCheckbox = document.getElementById('auto_refresh_checkbox').checked;
+            if(autoRefreshCheckbox){
+                document.querySelector("form").submit();
+            }
+        }
             
-            linkElement.style.color = "#C62828"
-            linkElement.setAttribute('href', url);
+        setInterval(myFunction, 9000);
+    </script>
+    
+    <script>
+        const links = document.querySelectorAll('tr');
+
+        links.forEach(link => {
+            // Check if link has been visited
+            if (localStorage.getItem(link.id)) {
+                link.classList.add('visited');
+            }
+
+            // Mark link as visited on click
+            link.addEventListener('click', () => {
+                localStorage.setItem(link.id, true);
+                link.classList.add('visited');
+            });
         });
-    }
-</script>
-
-<script>
-const links = document.querySelectorAll('a');
-
-links.forEach(link => {
-  // Check if link has been visited
-  if (localStorage.getItem(link.id)) {
-    link.classList.add('visited');
-  }
-
-  // Mark link as visited on click
-  link.addEventListener('click', () => {
-    localStorage.setItem(link.id, true);
-    link.classList.add('visited');
-  });
-});
-</script>
+    </script>
 </body>
 </html>
-
-
-
-  
-
-  
