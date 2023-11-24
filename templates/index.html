@@ -44,7 +44,7 @@
         </div>
         <style>
             .visited {
-            color: rgb(0, 246, 70);
+            background-color: rgb(0, 246, 70);
             }
         </style>
     </form>
@@ -58,11 +58,11 @@
               <th>Date</th>
             </tr>
             {% for listing in listings %}
-                <tr id="{{ listing.owner_name }} - {{ listing.item_name }} - {{ listing.price }}" style="text-align: left;" onclick="makeRequest(event, '{{listing.profile_link}}')">
+                <tr style="text-align: left;">
                     <td><img src="https://avatars.akamai.steamstatic.com/{{ listing.owner_avatar }}" ></td>
                     <td target="_blank">{{ listing.owner_name }} - {{ listing.item_name }}</td>
                     <td>${{ listing.price }}</td>
-                    <td><button onclick="makeRequest(event, '{{listing.profile_link}}')">OPEN LINK</button></td>
+                    <td><button id="{{ listing.owner_name }} - {{ listing.item_name }} - {{ listing.price }}" onclick="makeRequest(event, '{{listing.profile_link}}')">OPEN LINK</button></td>
                     <td>{{ listing.time }}</td>
                 </tr>
             {% endfor %}
@@ -88,7 +88,7 @@
     </script>
     
     <script>
-        const links = document.querySelectorAll('tr');
+        const links = document.querySelectorAll('button');
 
         links.forEach(link => {
             // Check if link has been visited
